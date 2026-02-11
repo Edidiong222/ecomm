@@ -22,7 +22,7 @@ export default function Login() {
     setError("");
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      window.location.href = "/";
+      window.location.hrefz = "/";
     } catch (err) {
       setError(err.message);
     }
