@@ -1,6 +1,8 @@
 "use client"
 import { useState } from "react";
 import { auth, googleProvider } from "../firebase";
+import {ArrowPathIcon} from "@heroicons/react/24/outline";
+
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -16,13 +18,17 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // 🔹 loading state
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      window.location.hrefz = "/";
+      window.location.href = "/";
     } catch (err) {
       setError(err.message);
     }
@@ -87,7 +93,7 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-                <EyeIcon className="w-5 h-5 text-slate-400 cursor-pointer" />
+                {/* <EyeIcon className="w-5 h-5 text-slate-400 cursor-pointer" /> */}
               </div>
             </div>
 
@@ -103,9 +109,17 @@ export default function Login() {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-medium transition"
+              disabled={loading}
+              className="w-full  flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-medium transition"
             >
-              Sign In
+                 {loading ? (
+              <>
+                <ArrowPathIcon className="w-5 h-5 animate-spin" />
+            
+              </>
+            ) : (
+              "Sign In"
+            )}
             </button>
           </form>
 

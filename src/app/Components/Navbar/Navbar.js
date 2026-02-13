@@ -47,22 +47,26 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="w-full border-b bg-white">
+<header className="relative w-full py-4 bg-white">
+
       {/* Top Navbar */}
       <div className="max-w-7xl  mx-auto px-4 py-4">
 
         <div className="flex justify-between lg:flex-row lg:items-center lg:justify-between gap-4">
         <div className="flex items-center">
-        <div>
+        {/* <div>
           <Link href='/'>
           <HomeIcon className="w-8 h-8 text-blue-500"/>
         </Link>
-        </div>
-
-          {/* Logo */}
+        </div> */}
+          <Link href="/">
           <h1 className="text-3xl font-bold text-blue-600 cursor-pointer">
             MegaMart
           </h1>
+          
+          </Link>
+
+          {/* Logo */}
           </div>
 
           {/* Search */}
@@ -105,7 +109,13 @@ export default function Navbar() {
                     >
                       Profile
                     </Link>
-
+                      <Link
+                      href="/Pages/Orders"
+                      className="block px-4 py-2 text-sm  rounded-xl hover:bg-blue-50"
+                      onClick={() => setOpen(false)}
+                    >
+                     Orders
+                    </Link>
                     <button
                       onClick={() => setShowLogoutModal(true)}
                       className="w-full text-left px-4 py-2  rounded-xl text-sm text-red-500 hover:bg-blue-50"
@@ -118,7 +128,7 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/Pages/Login"
-                className="py-2 px-4 bg-blue-200 rounded-2xl font-bold text-slate-700"
+                className="py-2 px-4 bg-blue-200 rounded-xl font-bold text-slate-700"
               >
                 Sign In
               </Link>
@@ -144,12 +154,12 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Categories */}
+      {/* Categories
       <div className="bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <Categories />
         </div>
-      </div>
+      </div> */}
 
       {/* Logout Modal */}
       {showLogoutModal && (
@@ -172,6 +182,7 @@ export default function Navbar() {
                 onClick={async () => {
                   await signOut(auth);
                   setShowLogoutModal(false);
+                  alert("Signed Out")
                 }}
                 className="px-4 py-2 rounded-xl bg-red-500 text-white"
               >
@@ -181,6 +192,10 @@ export default function Navbar() {
           </div>
         </div>
       )}
+
+
+
+<div className="pointer-events-none absolute bottom-0 left-0 w-full h-3 bg-gradient-to-b from-black/30 to-transparent"></div>
     </header>
   );
 }

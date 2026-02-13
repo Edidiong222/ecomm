@@ -2,10 +2,14 @@
 import { useEffect, useState } from "react";
 import { db } from "../Pages/firebase";
 import { collection, onSnapshot } from "firebase/firestore";
+import { FaTruckLoading } from "react-icons/fa";
+import { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 // ✅ Import from swiper/react
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import { ArrowPathIcon } from "@heroicons/react/24/solid"; // spinner icon
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -24,10 +28,49 @@ export default function RandomProductsSwiper() {
   }, []);
 
   // ✅ Prevent Swiper from initializing with 0 slides (breaks loop)
-  if (products.length === 0) return <p>Loading...</p>;
+  if (products.length === 0) return  <div className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-md z-50">
+  <div className="w-36 h-36 flex items-center justify-center bg-white rounded-2xl shadow-2xl">
+    <ArrowPathIcon className="w-12 h-12 text-blue-400 animate-spin" />
+  </div>
+</div>
+
+
+
+
+
+
+    const addToCart = (product) => {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const existing = cart.find((item) => item.id === product.id);
+
+    
+
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      cart.push({
+        id: product.id,
+        productName: product.productName,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        category: product.category,
+        quantity: 1,
+      });
+    }
+
+    window.dispatchEvent(new Event("storage"));
+
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    toast.success("Added to cart");
+
+    window.dispatchEvent(new Event("storage"));
+
+  };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
+    <div className="max-w-7xl  mx-auto px-12 py-10">
       <h2 className="text-2xl font-bold mb-6">Featured Products</h2>
 
       <Swiper

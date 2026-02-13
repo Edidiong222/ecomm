@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { auth, db } from "../firebase";
 import { doc, getDoc, updateDoc, collection, addDoc, Timestamp } from "firebase/firestore";
 import Navbar from "@/app/Components/Navbar/Navbar";
@@ -115,13 +116,17 @@ export default function Profile() {
     }
   };
 
-  if (loading) return <p className="p-10 text-center">               
-   <ArrowPathIcon className="w-20 h-20 m-auto z-30 text-blue-500 animate-spin" />
-</p>;
+  if (loading) return   <div className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-md z-50">
+  <div className="w-40 h-40 flex items-center justify-center bg-white rounded-2xl shadow-2xl">
+    <ArrowPathIcon className="w-15 h-15 text-blue-400 animate-spin" />
+  </div>
+</div>
+
   if (!user)
     return (
       <p className="p-10 text-center text-red-500">
-        Please log in to view your profile.
+        <Link href="/Pages/Login"> Please log in to view your profile.</Link>
+       
       </p>
     );
 
@@ -129,137 +134,213 @@ export default function Profile() {
   const finalPricePreview =
     price && discount ? price - (price * discount) / 100 : price;
 
-  return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-start px-4 py-8 gap-8">
-      {/* User Info */}
-      <Navbar/>
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-lg p-8">
-        <h2 className="text-3xl font-bold mb-6 text-slate-800">Your Profile</h2>
-        <div className="space-y-4 text-slate-700">
-          <p>
-            <span className="font-medium">Username:</span>{" "}
-            {userData?.username || user.displayName || "Not set"}
-          </p>
-          <p>
-            <span className="font-medium">Email:</span> {userData?.email || user.email}
-          </p>
-          <p>
-            <span className="font-medium">Role:</span> {userData?.role || "buyer"}
-          </p>
-        </div>
 
-        {/* Role Buttons */}
-        {userData?.role === "buyer" && (
-          <button
-            onClick={() => handleRoleChange("vendor")}
-            disabled={updatingRole}
-            className="mt-6 w-full py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"
-          >
-            {updatingRole ? "Applying..." : "Apply to be a Vendor"}
-          </button>
-        )}
+    return (
+  <div className="min-h-screen bg-slate-50">
+    <Navbar />
 
-        {userData?.role === "vendor" && (
-          <button
-            onClick={() => handleRoleChange("buyer")}
-            disabled={updatingRole}
-            className="mt-6 w-full py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition"
-          >
-            {updatingRole ? "Updating..." : "Stop Being a Vendor"}
-          </button>
-        )}
-      </div>
+    <div className="max-w-7xl mx-auto px-4 py-8">
 
-      {/* Vendor Product Upload Form */}
-      {userData?.role === "vendor" && (
-        <div className="w-full max-w-md bg-white rounded-3xl shadow-lg p-8">
-          <h2 className="text-2xl font-bold mb-4 text-slate-800">Upload Product</h2>
-          <form onSubmit={handleProductUpload} className="space-y-4">
-            {/* Product Name */}
-            <input
-              type="text"
-              placeholder="Product Name"
-              value={productName}
-              onChange={(e) => setProductName(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:border-blue-500"
-              required
-            />
+      {/* Responsive Grid Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-            {/* Category */}
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:border-blue-500"
-            >
-              {categoriesList.map((cat, idx) => (
-                <option key={idx} value={cat}>{cat}</option>
-              ))}
-            </select>
+        {/* ================= LEFT SIDE (Dominant Profile) ================= */}
+        <div className="lg:col-span-2 space-y-8">
 
-            {/* Price */}
-            <input
-              type="number"
-              placeholder="Price (max 4,000,000)"
-              value={price}
-              onChange={(e) => setPrice(Math.min(e.target.value, 4000000))}
-              className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:border-blue-500"
-              required
-            />
+          {/* Profile Card */}
+          <div className="bg-white rounded-3xl shadow-md p-8">
+            <h2 className="text-3xl font-bold text-slate-800 mb-6">
+              Your Profile
+            </h2>
 
-            {/* Discount */}
-            <input
-              type="number"
-              placeholder="Discount (%) max 100"
-              value={discount}
-              onChange={(e) => setDiscount(Math.min(e.target.value, 100))}
-              className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:border-blue-500"
-            />
-
-            {/* Live Final Price */}
-            {price && (
-              <p className="text-right text-gray-600">
-                Final Price: <span className="font-bold">{finalPricePreview}</span>
+            <div className="space-y-4 text-slate-600">
+              <p>
+                <span className="font-semibold text-slate-800">Username:</span>{" "}
+                {userData?.username || user.displayName || "Not set"}
               </p>
+              <p>
+                <span className="font-semibold text-slate-800">Email:</span>{" "}
+                {userData?.email || user.email}
+              </p>
+              <p>
+                <span className="font-semibold text-slate-800">Role:</span>{" "}
+                {userData?.role || "buyer"}
+              </p>
+            </div>
+
+            {/* Role Buttons */}
+            {userData?.role === "buyer" && (
+              <button
+                onClick={() => handleRoleChange("vendor")}
+                disabled={updatingRole}
+                className="mt-6 w-full py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition"
+              >
+                {updatingRole ? "Applying..." : "Apply to be a Vendor"}
+              </button>
             )}
 
-            {/* Description */}
-            <textarea
-              placeholder="Description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:border-blue-500"
-            />
-
-            {/* Image URL */}
-            <input
-              type="text"
-              placeholder="Image URL"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:border-blue-500"
-              required
-            />
-
-            {/* Image Preview */}
-            {imageUrl && (
-              <img
-                src={imageUrl}
-                alt="Preview"
-                className="w-32 h-32 object-cover rounded-xl mx-auto"
-              />
+            {userData?.role === "vendor" && (
+              <button
+                onClick={() => handleRoleChange("buyer")}
+                disabled={updatingRole}
+                className="mt-6 w-full py-3 bg-rose-600 text-white rounded-xl hover:bg-rose-700 transition"
+              >
+                {updatingRole ? "Updating..." : "Stop Being a Vendor"}
+              </button>
             )}
+          </div>
 
-            {/* Upload Button */}
-            <button
-              type="submit"
-              disabled={uploading}
-              className="w-full py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition"
-            >
-              {uploading ? "Uploading..." : "Upload Product"}
-            </button>
-          </form>
+          {/* Vendor Upload Form */}
+          {userData?.role === "vendor" && (
+            <div className="bg-white rounded-3xl shadow-md p-8">
+              <h2 className="text-2xl font-bold text-slate-800 mb-6">
+                Upload Product
+              </h2>
+
+              <form onSubmit={handleProductUpload} className="space-y-4">
+
+                <input
+                  type="text"
+                  placeholder="Product Name"
+                  value={productName}
+                  onChange={(e) => setProductName(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  required
+                />
+
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  {categoriesList.map((cat, idx) => (
+                    <option key={idx} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <input
+                    type="number"
+                    placeholder="Price"
+                    value={price}
+                    onChange={(e) =>
+                      setPrice(Math.min(e.target.value, 4000000))
+                    }
+                    className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    required
+                  />
+
+                  <input
+                    type="number"
+                    placeholder="Discount (%)"
+                    value={discount}
+                    onChange={(e) =>
+                      setDiscount(Math.min(e.target.value, 100))
+                    }
+                    className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+
+                {price && (
+                  <p className="text-right text-slate-600">
+                    Final Price:{" "}
+                    <span className="font-semibold text-indigo-600">
+                      {finalPricePreview}
+                    </span>
+                  </p>
+                )}
+
+                <textarea
+                  placeholder="Description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+
+                <input
+                  type="text"
+                  placeholder="Image URL"
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  required
+                />
+
+                {imageUrl && (
+                  <img
+                    src={imageUrl}
+                    alt="Preview"
+                    className="w-32 h-32 object-cover rounded-xl mx-auto shadow"
+                  />
+                )}
+
+                <button
+                  type="submit"
+                  disabled={uploading}
+                  className="w-full py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition"
+                >
+                  {uploading ? "Uploading..." : "Upload Product"}
+                </button>
+              </form>
+            </div>
+          )}
         </div>
-      )}
+
+        {/* ================= RIGHT SIDE (Mini Dashboard) ================= */}
+        <div className="space-y-6">
+
+          {/* Stats Cards */}
+          <div className="bg-white rounded-2xl shadow p-6">
+            <h3 className="text-slate-700 font-semibold mb-4">
+              Account Overview
+            </h3>
+
+            <div className="space-y-4 text-sm text-slate-600">
+              <div className="flex justify-between">
+                <span>Status</span>
+                <span className="font-semibold text-indigo-600">
+                  {userData?.role || "buyer"}
+                </span>
+              </div>
+
+              <div className="flex justify-between">
+                <span>Member Since</span>
+                <div className="font-semibold">
+                  {user?.metadata?.creationTime?.slice(0, 17)}
+                </div>
+              </div>
+
+              <div className="flex justify-between">
+                <span>Email Verified</span>
+                <span
+                  className={`font-semibold ${
+                    user.emailVerified
+                      ? "text-green-600"
+                      : "text-rose-600"
+                  }`}
+                >
+                  {user.emailVerified ? "Yes" : "No"}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Placeholder Analytics */}
+          <div className="bg-white rounded-2xl shadow p-6">
+            <h3 className="text-slate-700 font-semibold mb-4">
+              Activity Summary
+            </h3>
+
+            <div className="h-40 bg-gradient-to-br from-indigo-50 to-slate-100 rounded-xl flex items-center justify-center text-slate-400 text-sm">
+             <Link href="/Pages/Dashboard">Click here to View Dashboard</Link>
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
-  );
+  </div>
+);
 }

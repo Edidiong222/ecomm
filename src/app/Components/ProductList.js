@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { db } from "../Pages/firebase";
+import { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { collection, getDocs } from "firebase/firestore";
 
 export default function ProductList() {
@@ -40,7 +42,7 @@ export default function ProductList() {
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
-    alert("🛒 Added to cart");
+    toast.success("Added to cart");
   };
 
   // -----------------------------
@@ -100,7 +102,7 @@ export default function ProductList() {
       </div> */}
 
       {/* PRODUCTS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {filteredProducts.map((prod) => (
           <div
             key={prod.id}
@@ -132,7 +134,7 @@ export default function ProductList() {
             </button>
           </div>
         ))}
-      </div>
+      </div> */}
 
       {/* RANDOM PICKS */}
       <h3 className="text-xl font-semibold mt-10">Random Picks</h3>
@@ -141,7 +143,7 @@ export default function ProductList() {
         {randomProducts.map((prod) => (
           <div
             key={prod.id}
-            className="bg-white rounded-xl shadow p-4 flex flex-col gap-3"
+            className="bg-gray-100 rounded-xl shadow-xl p-4 flex flex-col gap-3"
           >
             <img
               src={prod.imageUrl}

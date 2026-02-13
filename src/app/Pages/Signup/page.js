@@ -4,6 +4,8 @@ import { auth } from "../firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { ArrowPathIcon } from "@heroicons/react/24/solid"; // spinner icon
 import { doc, setDoc } from "firebase/firestore";
+import { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { db } from "../firebase"; // adjust the path if needed
 
 export default function SignUp() {
@@ -42,6 +44,7 @@ const handleSignUp = async (e) => {
     // 4️⃣ Redirect to home page
     window.location.href = "/";
   } catch (err) {
+    toast.error(err.message);
     setError(err.message);
     setLoading(false);
   }
@@ -52,6 +55,8 @@ const handleSignUp = async (e) => {
     <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
       <div className="w-full max-w-md bg-white rounded-3xl shadow-lg p-8">
         <h2 className="text-3xl font-bold text-slate-800 mb-6">Sign Up</h2>
+
+    <Toaster/>
 
         {error && <p className="text-red-500 mb-4">{error}</p>}
 

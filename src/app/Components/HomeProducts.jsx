@@ -1,7 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
+import { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+
 import { db } from "../Pages/firebase";
 import { collection, onSnapshot } from "firebase/firestore";
+import { FaAppleAlt, FaHome, FaTv, FaTshirt, FaSpa, FaFootballBall, FaBook } from "react-icons/fa";
 
 export default function HomeProducts() {
   const [products, setProducts] = useState([]);
@@ -19,6 +23,17 @@ export default function HomeProducts() {
     "Sports",
     "Books",
   ];
+
+  const categoryIcons = {
+  All: null,
+  Groceries: <FaAppleAlt />,
+  Home: <FaHome />,
+  Electronics: <FaTv />,
+  Fashion: <FaTshirt />,
+  Beauty: <FaSpa />,
+  Sports: <FaFootballBall />,
+  Books: <FaBook />,
+};
 
   /* 🛒 ADD TO CART */
   const addToCart = (product) => {
@@ -45,7 +60,7 @@ export default function HomeProducts() {
 
 
     localStorage.setItem("cart", JSON.stringify(cart));
-    alert("🛒 Added to cart");
+    toast.success("Added to cart");
 
     window.dispatchEvent(new Event("storage"));
 
@@ -72,7 +87,8 @@ export default function HomeProducts() {
   }, {});
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10 space-y-10">
+    <div className="max-w-7xl mx-auto px-4  py-10 space-y-10">
+                <Toaster position="top-right" />
 
       {/* 🔍 Search */}
       <input
@@ -80,24 +96,26 @@ export default function HomeProducts() {
         placeholder="Search products..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:border-blue-500"
+        className="w-full px-4 py-3 rounded-2xl bg-blue-50  focus:outline-none focus:border-blue-500"
       />
 
       {/* 🧭 Categories */}
-      <div className="flex gap-3 overflow-x-auto">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
-            className={`px-4 py-2 rounded-xl whitespace-nowrap
-              ${activeCategory === cat
-                ? "bg-blue-600 text-white"
-                : "bg-slate-200 hover:bg-slate-300"}`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
+    <div className="flex lg:justify-center gap-3 overflow-x-auto px-4">
+  {categories.map((cat) => (
+    <button
+      key={cat}
+      onClick={() => setActiveCategory(cat)}
+      className={`flex items-center gap-2 px-4 py-2 rounded-xl whitespace-nowrap transition
+        ${
+          activeCategory === cat
+            ? "bg-blue-600 text-white"
+            : "bg-slate-200 hover:bg-slate-300"
+        }`}
+    >
+      {categoryIcons[cat]} {cat}
+    </button>
+  ))}
+</div>
 
       {/* 🗂 Products */}
       {Object.entries(grouped)
@@ -127,7 +145,7 @@ export default function HomeProducts() {
                     <p className="text-green-600 font-semibold">
                       ₦{p.price}
                       {p.discount > 0 && (
-                        <span className="text-sm text-gray-400 line-through ml-2">
+                        <span className="text-xs text-gray-400 line-through ml-1">
                           ₦{p.originalPrice}
                         </span>
                       )}
@@ -137,7 +155,7 @@ export default function HomeProducts() {
                       onClick={() => addToCart(p)}
                       className="mt-auto bg-green-600 text-white py-2 rounded-xl hover:bg-green-700"
                     >
-                      🛒 Add to Cart
+                     <h1 className="font-bold"> Add to Cart </h1>
                     </button>
                   </div>
                 ))}
